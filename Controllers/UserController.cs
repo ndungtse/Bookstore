@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using BookStoreApi.Models;
 using BookStoreApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using BookStoreApi.Utils;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BookStoreApi.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/users")]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
@@ -17,8 +19,18 @@ public class UserController : ControllerBase
         _userService = userService;
     }
     [HttpGet]
-    public async Task<List<User>> Get() =>
-        await _userService.GetAllAsync();
+    public async Task<IActionResult> Get()
+    {
+        try
+        {
+            List<User> users = await _userService.GetAllAsync();
+            return Ok(new { message = "User fetched successfully", data = users, success = true });
+        }
+        catch (System.Exception)
+        {
+            return BadRequest(new { message = "something went wrong" });
+        }
+    }
 
 
     [HttpGet("{id:length(24)}")]

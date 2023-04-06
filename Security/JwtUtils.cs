@@ -11,7 +11,7 @@ public static class JwtUtils
 {
 
     private static readonly IConfiguration _configuration;
-    private static readonly string secret;
+    public static readonly string secret;
 
     static JwtUtils()
     {

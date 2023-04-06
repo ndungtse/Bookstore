@@ -2,9 +2,9 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace BookStoreApi.Models;
+namespace BookStoreApi.Models.Dtos;
 
-public class LoginModel : IValidatableObject
+public class LoginDto : IValidatableObject
 {
     [Required]
     [EmailAddress]
