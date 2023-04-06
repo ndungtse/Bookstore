@@ -1,10 +1,10 @@
-using BookStoreApi.Utils;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace BookStoreApi.Models;
+namespace BookStoreApi.Models.Daos;
 
-public class User
+public class UserDao
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -12,9 +12,6 @@ public class User
 
     [BsonElement("email")]
     public string Email { get; set; } = null!;
-
-    [BsonElement("password")]
-    public string Password { get; set; } = null!;
 
     [BsonElement("roles")]
     public string[] Roles { get; set; } = null!;

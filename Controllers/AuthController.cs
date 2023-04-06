@@ -1,3 +1,4 @@
+using BookStoreApi.Models.Dtos;
 using BookStoreApi.Models;
 using BookStoreApi.Security;
 using BookStoreApi.Services;
@@ -15,11 +16,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Authenticate([FromBody] LoginModel model)
+    public async Task<IActionResult> Authenticate([FromBody] LoginDto dto)
     {
-        var user = await _userService.GetByEmailAsync(model.Email);
+        var user = await _userService.GetByEmailAsync(dto.Email);
 
-        if (user is null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+        if (user is null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
         {
             return BadRequest(new { message = "Email or password is incorrect" });
         }

@@ -12,13 +12,13 @@ public class BooksService
         IOptions<BookStoreDatabaseSettings> bookStoreDatabaseSettings)
     {
         var mongoClient = new MongoClient(
-            bookStoreDatabaseSettings.Value.ConnectionString);
+            bookStoreDatabaseSettings.Value.OfflineString);
 
         var mongoDatabase = mongoClient.GetDatabase(
             bookStoreDatabaseSettings.Value.DatabaseName);
 
         _booksCollection = mongoDatabase.GetCollection<Book>(
-            bookStoreDatabaseSettings.Value.BooksCollectionName);
+           bookStoreDatabaseSettings.Value.BooksCollectionName);
     }
 
     public async Task<List<Book>> GetAsync() =>

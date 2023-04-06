@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using BookStoreApi.Middlewares;
 using BookStoreApi.Models;
 using BookStoreApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,18 +32,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = true,
         ValidAudience = builder.Configuration["Jwt:Audience"],
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 
-    // options.Events = new JwtBearerEvents
-    // {
-    //     OnAuthenticationFailed = context =>
-    //     {
-    //         context.Response.ContentType = "application/json";
-    //         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-    //         return context.Response.WriteAsync(JsonConvert.SerializeObject(new { message = "Unauthorized" }));
-    //     }
-    // };
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(new { message = "Unauthorized" }));
+        }
+    };
 });
 
 builder.Services.AddSwaggerGen(c =>
@@ -74,15 +75,19 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// app.UseMiddleware<JwtAuthenticationMiddleware>();
+// app.Map("/api/users", usersApp =>
+// {
+//     usersApp.UseMiddleware<JwtAuthenticationMiddleware>();
+// });
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 
