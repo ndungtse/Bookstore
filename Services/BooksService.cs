@@ -12,7 +12,7 @@ public class BooksService
         IOptions<BookStoreDatabaseSettings> bookStoreDatabaseSettings)
     {
         var mongoClient = new MongoClient(
-            bookStoreDatabaseSettings.Value.OfflineString);
+            bookStoreDatabaseSettings.Value.getConnectionString());
 
         var mongoDatabase = mongoClient.GetDatabase(
             bookStoreDatabaseSettings.Value.DatabaseName);
