@@ -11,7 +11,7 @@ public class UserService: IUserRepository
 
     public UserService(IOptions<BookStoreDatabaseSettings> bookStoreDatabaseSettings)
     {
-        var database = new MongoClient(bookStoreDatabaseSettings.Value.OfflineString)
+        var database = new MongoClient(bookStoreDatabaseSettings.Value.getConnectionString())
             .GetDatabase(bookStoreDatabaseSettings.Value.DatabaseName);
         _collection = database.GetCollection<User>("users");
     }
